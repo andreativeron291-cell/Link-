@@ -1,0 +1,558 @@
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GALAXITICA — Schermata Iniziale</title>
+
+  <!-- Caricamento Tailwind CSS per layout e utilità responsive -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font futuristico Orbitron + Inter per leggibilità -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Configurazione base del font e prevenzione scorrimento orizzontale */
+    :root {
+      --bg-void: #03050c;
+      --neon-cyan: #22d3ee;
+      --neon-purple: #a855f7;
+      --neon-pink: #ec4899;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg-void);
+      color: #f8fafc;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-display {
+      font-family: "Orbitron", sans-serif;
+    }
+
+    /* Canvas dello spazio a pieno schermo */
+    #space-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+    }
+
+    /* Nebulose morbide sullo sfondo per profondità visiva */
+    .nebula-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 18% 25%, rgba(168, 85, 247, 0.20), transparent 45%),
+        radial-gradient(circle at 82% 22%, rgba(34, 211, 238, 0.16), transparent 48%),
+        radial-gradient(circle at 65% 82%, rgba(236, 72, 153, 0.14), transparent 50%);
+      filter: blur(8px);
+      animation: nebulaDrift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes nebulaDrift {
+      0% {
+        transform: scale(1) translate3d(0, 0, 0);
+      }
+      100% {
+        transform: scale(1.06) translate3d(-1.5%, 1.5%, 0);
+      }
+    }
+
+    /* Griglia prospettica sci-fi discreta nella parte inferiore */
+    .sci-fi-grid {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 36vh;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(to right, rgba(34, 211, 238, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(168, 85, 247, 0.25) 1px, transparent 1px);
+      background-size: 56px 36px;
+      transform: perspective(500px) rotateX(62deg);
+      transform-origin: bottom center;
+      mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+      -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    }
+
+    /* Effetto bagliore e fluttuazione del titolo GALAXITICA */
+    .title-glow {
+      text-shadow:
+        0 0 12px rgba(34, 211, 238, 0.75),
+        0 0 28px rgba(168, 85, 247, 0.65),
+        0 0 56px rgba(236, 72, 153, 0.35);
+      animation: titleFloat 4.2s ease-in-out infinite;
+    }
+
+    @keyframes titleFloat {
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    /* Pulsante GIOCA futuristico con bordo luminoso e riflesso */
+    .play-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.24), rgba(168, 85, 247, 0.32));
+      border: 1.5px solid rgba(103, 232, 249, 0.75);
+      box-shadow:
+        0 0 24px rgba(34, 211, 238, 0.35),
+        0 0 48px rgba(168, 85, 247, 0.25),
+        inset 0 0 18px rgba(255, 255, 255, 0.14);
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.25s ease,
+                  border-color 0.25s ease,
+                  background 0.25s ease;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      border-color: #ffffff;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.42), rgba(168, 85, 247, 0.48));
+      box-shadow:
+        0 0 32px rgba(34, 211, 238, 0.65),
+        0 0 64px rgba(168, 85, 247, 0.45),
+        inset 0 0 24px rgba(255, 255, 255, 0.25);
+    }
+
+    .play-btn:active {
+      transform: translateY(0px) scale(0.98);
+    }
+
+    /* Animazione riflesso diagonale sul pulsante GIOCA */
+    .play-btn::before {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -60%;
+      width: 45%;
+      height: 340%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.35),
+        transparent
+      );
+      transform: rotate(24deg);
+      animation: sheenSweep 3.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes sheenSweep {
+      0%,
+      68% {
+        left: -65%;
+      }
+      100% {
+        left: 135%;
+      }
+    }
+
+    /* Overlay di transizione verso il gioco */
+    .warp-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at center, rgba(34, 211, 238, 0.28), rgba(3, 5, 12, 0.96) 72%);
+      transition: opacity 0.45s ease;
+    }
+
+    .warp-overlay.active {
+      pointer-events: auto;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sfondo canvas animato con campo stellato, pianeti e stelle cadenti -->
+  <canvas id="space-canvas" aria-hidden="true"></canvas>
+
+  <!-- Livelli decorativi di nebulosa e griglia prospettica -->
+  <div class="nebula-layer" aria-hidden="true"></div>
+  <div class="sci-fi-grid" aria-hidden="true"></div>
+
+  <!-- Overlay di transizione durante l'avvio verso il sito del gioco -->
+  <div id="warp-overlay" class="warp-overlay flex flex-col items-center justify-center px-6 text-center" aria-live="polite">
+    <div class="w-12 h-12 rounded-full border-2 border-cyan-300 border-t-transparent animate-spin mb-4"></div>
+    <p class="font-display text-lg sm:text-xl tracking-widest text-cyan-200 uppercase">
+      Avvio missione spaziale...
+    </p>
+    <p class="text-xs sm:text-sm text-slate-300 mt-2">
+      Reindirizzamento a <span class="text-cyan-300 font-medium">Spazio</span> in corso
+    </p>
+  </div>
+
+  <!-- Contenitore principale della schermata iniziale -->
+  <main class="relative z-10 min-h-screen w-full flex flex-col justify-between px-4 py-5 sm:px-8 sm:py-7">
+    <!-- Barra superiore con badge stato e controllo audio -->
+    <header class="w-full max-w-5xl mx-auto flex items-center justify-between gap-3">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/65 border border-cyan-400/30 backdrop-blur-md text-xs sm:text-sm text-cyan-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>SETTORE GALATTICO ATTIVO</span>
+      </div>
+
+      <!-- Pulsante Audio sintetizzato (Web Audio API) -->
+      <button
+        id="audio-toggle-btn"
+        type="button"
+        aria-pressed="true"
+        class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900/70 hover:bg-slate-800/80 border border-slate-700/80 hover:border-cyan-400/60 backdrop-blur-md text-xs sm:text-sm font-medium text-slate-200 transition cursor-pointer"
+        title="Attiva o disattiva gli effetti sonori"
+      >
+        <!-- Icona altoparlante -->
+        <svg id="icon-sound-on" class="w-4 h-4 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 5L6 9H2v6h4l5 4V5z" />
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        </svg>
+        <svg id="icon-sound-off" class="w-4 h-4 text-rose-400 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 5L6 9H2v6h4l5 4V5z" />
+          <line x1="23" y1="9" x2="17" y2="15" />
+          <line x1="17" y1="9" x2="23" y2="15" />
+        </svg>
+        <span id="audio-label">Audio: ON</span>
+      </button>
+    </header>
+
+    <!-- Sezione centrale con Titolo GALAXITICA e Pulsante GIOCA -->
+    <section class="w-full max-w-3xl mx-auto my-auto py-8 flex flex-col items-center text-center">
+      <!-- Sottotitolo decorativo -->
+      <p class="font-display text-[11px] sm:text-xs md:text-sm tracking-[0.35em] text-cyan-300/90 uppercase mb-3">
+        Esplorazione • Azione • Cosmos
+      </p>
+
+      <!-- Titolo principale stilizzato -->
+      <h1
+        class="font-display title-glow font-black tracking-[0.12em] sm:tracking-[0.18em] text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase bg-gradient-to-b from-white via-cyan-100 to-purple-300 bg-clip-text text-transparent select-none"
+      >
+        GALAXITICA
+      </h1>
+
+      <!-- Linea decorativa luminosa -->
+      <div class="w-40 sm:w-64 h-[2px] my-5 sm:my-6 rounded-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-80"></div>
+
+      <!-- Breve descrizione immersiva -->
+      <p class="max-w-xl text-sm sm:text-base md:text-lg text-slate-300/90 leading-relaxed mb-8 sm:mb-10 px-2">
+        Solca le profondità dello spazio, schiva i pericoli cosmici e raggiungi nuove frontiere stellari.
+      </p>
+
+      <!-- Pulsante principale GIOCA -->
+      <div class="flex flex-col items-center gap-4 w-full">
+        <button
+          id="play-btn"
+          type="button"
+          class="play-btn group inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 sm:py-5 rounded-2xl font-display font-extrabold text-xl sm:text-2xl tracking-[0.2em] text-white uppercase cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
+          aria-label="Gioca a Galaxitica"
+        >
+          <span>GIOCA</span>
+          <svg
+            class="w-6 h-6 text-cyan-200 transition-transform duration-200 group-hover:translate-x-1.5"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </button>
+
+        <!-- Suggerimento controlli tastiera -->
+        <p class="text-xs sm:text-sm text-slate-400">
+          Premi <kbd class="px-2 py-0.5 rounded bg-slate-800/90 border border-slate-600 text-cyan-200 font-mono text-xs">INVIO</kbd>
+          o <kbd class="px-2 py-0.5 rounded bg-slate-800/90 border border-slate-600 text-cyan-200 font-mono text-xs">SPAZIO</kbd>
+          per avviare subito
+        </p>
+      </div>
+
+      <!-- Messaggio di notifica non bloccante (sostituisce alert/confirm) -->
+      <div
+        id="status-banner"
+        class="hidden mt-5 max-w-md w-full px-4 py-3 rounded-xl bg-slate-900/85 border border-cyan-400/40 text-xs sm:text-sm text-cyan-100 backdrop-blur-md"
+        role="status"
+      ></div>
+    </section>
+
+    <!-- Piè di pagina discreto con link diretto di sicurezza -->
+    <footer class="w-full max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400/90 pt-2">
+      <span>© GALAXITICA — Universi Interattivi</span>
+      <a
+        id="direct-link"
+        href="https://andreativeron291-cell.github.io/Spazio-/"
+        rel="noopener noreferrer"
+        class="text-cyan-300/90 hover:text-cyan-200 underline underline-offset-4 transition"
+      >
+        Apri direttamente il sito del gioco
+      </a>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // URL di destinazione richiesto quando si schiaccia GIOCA
+      const GAME_URL = "https://andreativeron291-cell.github.io/Spazio-/";
+
+      // Riferimenti agli elementi DOM principali
+      const canvas = document.getElementById("space-canvas");
+      const ctx = canvas ? canvas.getContext("2d") : null;
+      const playBtn = document.getElementById("play-btn");
+      const audioToggleBtn = document.getElementById("audio-toggle-btn");
+      const audioLabel = document.getElementById("audio-label");
+      const iconSoundOn = document.getElementById("icon-sound-on");
+      const iconSoundOff = document.getElementById("icon-sound-off");
+      const warpOverlay = document.getElementById("warp-overlay");
+      const statusBanner = document.getElementById("status-banner");
+
+      // Stato applicativo
+      let isLaunching = false;
+      let soundEnabled = true;
+      let audioCtx = null;
+
+      // Stato animazione campo stellato e corpi celesti
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      let stars = [];
+      let shootingStars = [];
+      let pointerOffset = { x: 0, y: 0 };
+      let targetPointerOffset = { x: 0, y: 0 };
+      let warpSpeedMultiplier = 1;
+      let lastFrameTime = 0;
+      let nextShootingStarTime = 1600;
+
+      /**
+       * Mostra un messaggio informativo nella pagina senza usare alert().
+       * @param {string} message
+       */
+      function showStatusMessage(message) {
+        if (!statusBanner) return;
+        statusBanner.textContent = message;
+        statusBanner.classList.remove("hidden");
+      }
+
+      /**
+       * Inizializza o riattiva l'AudioContext in modo sicuro tramite try/catch.
+       */
+      function ensureAudioContext() {
+        if (!soundEnabled) return null;
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return null;
+          if (!audioCtx) {
+            audioCtx = new AudioContextClass();
+          }
+          if (audioCtx.state === "suspended") {
+            audioCtx.resume();
+          }
+          return audioCtx;
+        } catch (err) {
+          return null;
+        }
+      }
+
+      /**
+       * Riproduce un breve effetto sonoro sintetizzato (hover o avvio missione).
+       * @param {"hover" | "launch" | "toggle"} type
+       */
+      function playSynthSound(type) {
+        if (!soundEnabled) return;
+        const context = ensureAudioContext();
+        if (!context) return;
+
+        try {
+          const now = context.currentTime;
+
+          if (type === "hover") {
+            const osc = context.createOscillator();
+            const gain = context.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(780, now + 0.08);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.04, now + 0.015);
+            gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.09);
+
+            osc.connect(gain);
+            gain.connect(context.destination);
+            osc.start(now);
+            osc.stop(now + 0.095);
+          } else if (type === "launch") {
+            // Effetto decollo / warp sintetizzato
+            const osc1 = context.createOscillator();
+            const osc2 = context.createOscillator();
+            const gain = context.createGain();
+
+            osc1.type = "sawtooth";
+            osc2.type = "triangle";
+
+            osc1.frequency.setValueAtTime(160, now);
+            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.42);
+
+            osc2.frequency.setValueAtTime(240, now);
+            osc2.frequency.exponentialRampToValueAtTime(1320, now + 0.42);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.08, now + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(context.destination);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.46);
+            osc2.stop(now + 0.46);
+          } else if (type === "toggle") {
+            const osc = context.createOscillator();
+            const gain = context.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(660, now + 0.05);
+
+            gain.gain.setValueAtTime(0.035, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+            osc.connect(gain);
+            gain.connect(context.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+          }
+        } catch (err) {
+          // Ignora eventuali limitazioni del browser sull'audio
+        }
+      }
+
+      /**
+       * Aggiorna l'interfaccia visiva del pulsante audio.
+       */
+      function updateAudioUI() {
+        if (!audioToggleBtn || !audioLabel || !iconSoundOn || !iconSoundOff) return;
+        audioToggleBtn.setAttribute("aria-pressed", String(soundEnabled));
+        if (soundEnabled) {
+          audioLabel.textContent = "Audio: ON";
+          iconSoundOn.classList.remove("hidden");
+          iconSoundOff.classList.add("hidden");
+        } else {
+          audioLabel.textContent = "Audio: OFF";
+          iconSoundOn.classList.add("hidden");
+          iconSoundOff.classList.remove("hidden");
+        }
+      }
+
+      /**
+       * Crea le stelle distribuite su più livelli di profondità.
+       */
+      function createStars() {
+        const area = width * height;
+        const count = Math.min(260, Math.max(85, Math.floor(area / 4800)));
+        const palette = ["#ffffff", "#bae6fd", "#ddd6fe", "#fbcfe8", "#67e8f9"];
+
+        stars = Array.from({ length: count }, () => {
+          const depth = 0.25 + Math.random() * 0.95; // 0.25 (lontane) -> 1.2 (vicine)
+          return {
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: (0.7 + Math.random() * 1.7) * depth,
+            baseSpeed: (12 + Math.random() * 28) * depth,
+            twinklePhase: Math.random() * Math.PI * 2,
+            twinkleSpeed: 1.5 + Math.random() * 3,
+            color: palette[Math.floor(Math.random() * palette.length)],
+            depth: depth
+          };
+        });
+      }
+
+      /**
+       * Genera una stella cadente occasionale.
+       */
+      function spawnShootingStar() {
+        const startX = Math.random() * width * 0.85;
+        const startY = Math.random() * height * 0.45;
+        const angle = (26 + Math.random() * 18) * (Math.PI / 180);
+        const speed = 520 + Math.random() * 340;
+
+        shootingStars.push({
+          x: startX,
+          y: startY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          length: 75 + Math.random() * 75,
+          life: 0,
+          maxLife: 0.65 + Math.random() * 0.35
+        });
+      }
+
+      /**
+       * Ridimensiona il canvas in base alle dimensioni del contenitore e al devicePixelRatio.
+       */
+      function resizeCanvas() {
+        if (!canvas || !ctx) return;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        createStars();
+      }
+
+      /**
+       * Disegna un pianeta stilizzato con anello sci-fi sullo sfondo.
+       * @param {number} timeSec
+       */
+      function drawStylizedPlanet(timeSec) {
+        if (!ctx) return;
+        const planetX = width * 0.82 + targetPointerOffset.x * 0.35;
+        const planetY = height * 0.28 + targetPointerOffset.y * 0.35;
+        const radius = Math.min(width, height) * 0.085;
+
+        if (radius < 22) return;
+
+        ctx.save();
+        ctx.translate(planetX, planetY);
+
+        // Bagliore esterno del pianeta
+        const aura = ctx.createRadialGradient(0, 0, radius * 0.7, 0, 0, radius * 2.1);
+        aura.addColorStop(0, "rgba(56, 189, 248, 0.24)");
+        aura.addColorStop(0.6, "rgba(168, 85, 247, 0.10)");
+        aura.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = aura;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius * 2.1, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Corpo del pianeta
+        const bodyGrad = ctx.createLinearGrad
